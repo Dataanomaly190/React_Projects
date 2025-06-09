@@ -1,0 +1,173 @@
+import React, { useState } from "react";
+import underline from "./underline.png";
+
+export default function App() {
+  const [Password, setPassword] = useState("");
+  const [Strength, setStrength] = useState("");
+  const password = (event) => {
+    const new_password = event.target.value;
+    setPassword(new_password);
+    strength(new_password);
+  };
+
+  const strength = (encryption) => {
+    if (encryption === "") {
+      setStrength("");
+      return;
+    }
+    const pass = encryption.split("");
+    const All_Special_Characters = "~!@#$%^&*()_+-={}[]|:;'<>,.?'\"";
+    const Capital_Letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const Small_Letters = "abcdefghijklmnopqrstuvwxyz";
+    const Numbers = "0123456789";
+    const found_special_Characters = pass.filter((char) =>
+      All_Special_Characters.includes(char)
+    );
+    const found_capital_letters = pass.filter((char) =>
+      Capital_Letters.includes(char)
+    );
+    const found_small_letters = pass.filter((char) =>
+      Small_Letters.includes(char)
+    );
+    const found_numbers = pass.filter((char) => Numbers.includes(char));
+    if (
+      found_special_Characters.length > 0 &&
+      found_capital_letters.length > 0 &&
+      found_small_letters.length > 0 &&
+      found_numbers.length > 0
+    ) {
+      if (encryption.length > 15) {
+        setStrength("Very Strong!!!");
+      } else if (encryption.length > 10) {
+        setStrength("Strong!!");
+      } else if (encryption.length > 5) {
+        setStrength("Weak!");
+      } else {
+        setStrength("Very Weak X");
+      }
+    } else if (
+      (found_special_Characters.length > 0 ||
+        found_capital_letters.length > 0 ||
+        found_small_letters.length > 0 ||
+        found_numbers.length > 0) &&
+      Password.includes(" ")
+    ) {
+      setStrength("WRONG PASSWORD!");
+    } else {
+      setStrength("WRONG PASSWORD!");
+    }
+  };
+
+  const styles = () => {
+    if (Strength === "WRONG PASSWORD!") {
+      return { color: "red" };
+    } else if (Strength === "Very Weak X") {
+      return { color: "grey" };
+    } else if (Strength === "Weak!") {
+      return { color: "yellowGreen" };
+    } else if (Strength === "Strong!!") {
+      return { color: "green" };
+    } else if (Strength === "Very Strong!!!") {
+      return { color: "darkGreen" };
+    } else {
+      return {};
+    }
+  };
+
+  return (
+    <>
+      <div>
+        <h1 style={{ textAlign: "center", fontWeight: "bolder", fontSize: "50px", fontFamily: "serif" }}>
+          PASSWORD STRENGTH VALIDATOR :-
+        </h1>
+        <div style={{ marginTop: "50px", marginLeft: "650px" }}>
+          <span>
+            Enter Password:{" "}
+            <input
+              type="password"
+              placeholder="Password..."
+              value={Password}
+              onChange={password}
+            ></input>
+          </span>
+          <br />
+          <br />
+          <span>Password Strength: </span>
+          <strong style={styles()}>{" " + Strength}</strong>
+        </div>
+        <div
+          style={{
+            display: "flex-column",
+            justifyContent: "center",
+            alignItems: "center",
+            margin: "0 auto",
+            marginTop: "50px",
+            border: "2px solid rgba(255, 255, 255, 0.4)",
+            borderRadius: "25px",
+            padding: "30px",
+            background: "rgba(128, 128, 128, 0.8)",
+            backdropFilter: "blur(10px)",
+            boxShadow: "inset 0 0 20px rgba(255, 255, 255, 0.4)",
+            height: "500px",
+            width: "500px",
+          }}
+        >
+          <h4
+            style={{
+              textAlign: "center",
+              fontWeight: "bold",
+              color: "indigo",
+              textShadow: "2px 2px 4px rgba(0, 0, 0, 0.5)",
+              textTransform: "uppercase",
+              letterSpacing: "1px",
+              textIndent: "10px",
+            }}
+          >
+            Note
+          </h4>
+          <img
+            src={underline}
+            alt="img"
+            style={{ marginLeft: "75px", height: "50px", width: "300px" }}
+          />
+          <ul>
+            <li>
+              Password must contain at least 5 characters, including uppercase,
+              lowercase, numbers, and special characters otherwise invalid.
+            </li>
+            <li>
+              Password must not contain spaces or be less than 16 characters
+              long.
+            </li>
+            <li>
+              Password must not be easily guessable by a brute force, dictionary
+              or any other type of attack.
+            </li>
+            <li>
+              Password is categorized as follows:
+              <br />
+              <ul style={{ listStyleType: "square" }}>
+                <li>
+                  <strong>
+                    Very Weak X (Very Weak): Less than 5 characters.
+                  </strong>
+                </li>
+                <li>
+                  <strong>Weak! (Weak): Less than 10 characters.</strong>
+                </li>
+                <li>
+                  <strong>Strong!! (Strong): Less than 15 characters.</strong>
+                </li>
+                <li>
+                  <strong>
+                    Very Strong!!! (Very Strong): More than 15 characters.
+                  </strong>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </>
+  );
+}

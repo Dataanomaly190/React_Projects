@@ -1,0 +1,165 @@
+import React, { useState } from "react";
+import ToDo_list_img from "./ToDo_List_Image.jpg";
+
+export default function App() {
+  const [task, settask] = useState(""); 
+  const [taskBoard, settaskBoard] = useState([]);
+  const [editingIndex, setEditingIndex] = useState(null); 
+
+  const handleTask = (event) => {
+    const item = event.target.value;
+    settask(item);
+  };
+
+  const handleTaskBoard = () => {
+    if (task.trim() !== "") {
+      if (editingIndex !== null) {
+        const updatedTasks = taskBoard.map((item, idx) =>
+          idx === editingIndex ? task : item
+        );
+        settaskBoard(updatedTasks);
+        setEditingIndex(null); 
+      } else {
+        settaskBoard([...taskBoard, task]);
+      }
+      settask(""); 
+    }
+  };
+
+  const handleDeleteTask = (index) => {
+    const updatedTaskBoard = taskBoard.filter((_, idx) => idx !== index);
+    settaskBoard(updatedTaskBoard);
+  };
+
+  const handleEditTask = (index) => {
+    settask(taskBoard[index]); 
+    setEditingIndex(index); 
+  };
+
+  const GeneratedTask = ({ task, index }) => {
+    const taskbox = {
+      boxSizing: "border-box",
+      background: "rgba(211, 211, 211, 0.5)",
+      height: "75px",
+      width: "425px",
+      padding: "30px",
+      borderRadius: "15px",
+      overflowX: "hidden",
+      overflowY: "auto",
+      marginBottom: "15px",
+      whiteSpace: "normal",
+      display: "block",
+      justifyContent: "space-between",
+      alignItems: "center",
+    };
+
+    return (
+      <div style={taskbox}>
+        <p>{task}</p>
+        <div>
+          <button
+            onClick={() => handleEditTask(index)}
+            style={{
+              background: "blue",
+              color: "white",
+              border: "none",
+              borderRadius: "5px",
+              cursor: "pointer",
+              padding: "5px 10px",
+              marginRight: "10px",
+            }}
+          >
+            Edit
+          </button>
+          <button
+            onClick={() => handleDeleteTask(index)}
+            style={{
+              background: "red",
+              color: "white",
+              border: "none",
+              borderRadius: "5px",
+              cursor: "pointer",
+              padding: "5px 10px",
+            }}
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <>
+      <div
+        style={{
+          height: "100vh",
+          width: "100vw",
+          backgroundImage: `url(${ToDo_list_img})`,
+          backgroundSize: "cover",
+        }}
+      >
+        <div
+          style={{
+            color: "rgba(92, 51, 23, 0.9)",
+            textAlign: "center",
+            fontFamily: "cursive",
+            fontWeight: "bolder",
+            fontSize: "500%",
+            marginBottom: "50px",
+          }}
+        >
+          ToDo List
+        </div>
+        <div style={{ textAlign: "center" }}>
+          <div>
+            <input
+              type="text"
+              placeholder="Add or edit task..."
+              style={{
+                width: "300px",
+                borderRadius: "35px",
+                padding: "10px",
+              }}
+              value={task}
+              onChange={handleTask}
+            />
+            <button
+              onClick={handleTaskBoard}
+              style={{
+                marginLeft: "10px",
+                background: "DarkMagenta",
+                borderRadius: "35px",
+                fontWeight: "bold",
+                padding: "10px",
+                paddingLeft: "20px",
+                paddingRight: "20px",
+              }}
+            >
+              {editingIndex !== null ? "Save Changes" : "Save"}
+            </button>
+          </div>
+          <div
+            style={{
+              position: "relative",
+              border: "solid 7px rgba(0, 0, 0, 0.3)",
+              height: "500px",
+              width: "500px",
+              borderRadius: "15px",
+              marginTop: "25px",
+              marginLeft: "525px",
+              overflow: "auto",
+              wordWrap: "break-word",
+              padding: "30px",
+              background: "rgba(181, 180, 180, 0.7)",
+            }}
+          >
+            {taskBoard.map((task, index) => (
+              <GeneratedTask key={index} index={index} task={task} />
+            ))}
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}

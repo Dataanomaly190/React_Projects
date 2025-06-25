@@ -1,0 +1,75 @@
+.Send_container{
+    border: none;
+    height: 500px;
+    width: 500px;
+    border-radius: 45px;
+    padding: 30px;
+    background-color: aliceblue;
+}
+
+.box-One_subbox1{
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    padding-top: 10px;
+    gap: 50px;
+    border-bottom: 1px solid grey;
+}
+
+#para1{
+    font-weight: bold;
+}
+
+img{
+    display: flex;
+    justify-self: center;
+    height: 50px;
+    width: 50px;
+    cursor: pointer;
+}
+
+#para2{
+    margin: 0;
+    text-align: justify;
+}
+
+.Buttons{
+    display: flex;
+    justify-content: center;
+    padding-top: 20px;
+    font-weight: bold;
+    color: whitesmoke;
+}
+
+.pdf{
+    border-radius: 45px 0px 0px 45px;
+}
+
+.png{
+    border-radius: 0px 45px 45px 0px;
+}
+
+.pdf, .docx, .png{
+    border: none;
+    padding: 5px;
+    padding-left: 25px;
+    padding-right: 25px;
+    cursor: pointer;
+    background-color: rgb(53, 51, 51);
+}
+
+.img_section{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.img_section_part{
+    margin-top: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    gap: 30px;
+}

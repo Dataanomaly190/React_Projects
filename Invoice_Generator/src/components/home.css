@@ -1,0 +1,29 @@
+.home-container {
+    height: 100vh;
+    width: 100vw;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.text {
+    width: 1000px;
+    padding: 30px;
+    font-weight: bolder;
+    font-size: 70px;
+    font-style: italic;
+    font-family: 'Great Vibes', cursive;
+    letter-spacing: 0.3em;
+    color: gold;
+    border-radius: 180px;
+    overflow: hidden;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    background: linear-gradient(to right, rgba(18, 18, 18, 0.5), rgba(60, 0, 60, 0.5));
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.3);
+    text-align: center;
+}

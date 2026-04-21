@@ -1,12 +1,34 @@
-# React + Vite
+# Invoice Generator
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A professional-grade invoicing application with full management capabilities for drafts and transaction history.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Invoice Creation**: Simplified form for generating professional invoices.
+- **History Management**: Track and view past invoices through a dedicated history server.
+- **Draft System**: Save work-in-progress invoices for later completion.
+- **Multi-Service Architecture**: Uses separate micro-servers for invoices, history, and drafts.
+- **Modern Routing**: Smooth navigation between Home, Invoice, History, and Draft pages.
 
-## Expanding the ESLint configuration
+## Tech Stack
 
-If you are developing a production application, we recommend using TypeScript and enable type-aware lint rules. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- **Frontend**: React, React Router
+- **Backend**: Node.js (Concurrent services)
+- **Styling**: Modular CSS
+
+## Setup Instructions
+
+1. **Install dependencies**:
+
+   ```bash
+   npm install
+   ```
+
+2. **Run the application**:
+   This project uses `concurrently` to start both the frontend and the three backend servers (Invoice, History, Draft) simultaneously.
+
+   ```bash
+   npm run dev
+   ```
+
+---

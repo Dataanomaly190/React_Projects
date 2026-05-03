@@ -6,7 +6,7 @@ const cors = require("cors");
 const app = express();
 app.use(cors());
 
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 const API_KEY = process.env.API_KEY;
 const WEATHER_URL = "https://api.openweathermap.org/data/2.5/weather";
 
@@ -41,5 +41,5 @@ app.get("/weather", async (req, res) => {
 
 
 app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 });

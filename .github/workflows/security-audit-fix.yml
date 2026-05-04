@@ -1,0 +1,46 @@
+name: Security Audit Fix
+
+on:  
+  push: {}
+  schedule:
+    - cron: '0 0 * * 0'  # Runs every Sunday at midnight UTC
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        directory: ['ChatGPT', 'Invoice_Generator', 'Joke_Generator']
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - name: Install dependencies
+        working-directory: ./${{ matrix.directory }}
+        run: npm install
+      - name: Run npm audit fix
+        working-directory: ./${{ matrix.directory }}
+        run: npm audit fix --force || true
+      - name: Commit and push
+        run: |
+          git config --local user.email 'action@github.com'
+          git config --local user.name 'GitHub Action'
+          git add .
+          if git diff --quiet --cached; then
+            echo "No changes detected"
+          else
+            git commit -m "Updated"
+            git push
+          fi
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v4
+        with:
+          title: 'Security fix #${{ github.run_number }}'
+          body: 'Automated security fixes from npm audit'
+          base: main
+          commit-message: 'Security fix #${{ github.run_number }}'
+          auto-merge: 'squash'
+          delete-branch: true

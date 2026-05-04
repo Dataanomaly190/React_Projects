@@ -71,7 +71,11 @@ export default function App() {
 
   const handleWeatherData = async (city) => {
     try {
-      const response = await fetch(`http://localhost:5000/weather?q=${city}`);
+      const API_BASE = import.meta.env.MODE === "development"
+        ? "http://localhost:5000"
+        : "https://weather-forecast-zcb9.onrender.com";
+
+      const response = await fetch(`${API_BASE}/weather?q=${city}`);
       const data = await response.json();
       console.log(data);
 

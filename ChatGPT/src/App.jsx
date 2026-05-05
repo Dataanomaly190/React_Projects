@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import ReactMarkdown from "react-markdown";
 import "./App.css";
 import Dropdown from "./assets/dropdown.png";
 import EditIcon from "./assets/edit.png";
@@ -114,13 +115,13 @@ export default function App() {
                   msg.error ? "error" : ""
                 }`}
               >
-                <p
+                <div
                   className={
                     msg.sender === "user" ? "user_chat" : "assistant_chat"
                   }
                 >
-                  {msg.message}
-                </p>
+                  <ReactMarkdown>{msg.message}</ReactMarkdown>
+                </div>
               </div>
             ))}
             <div ref={messagesEndRef} className={conversation.length === 0 ? "" : "gap"} />

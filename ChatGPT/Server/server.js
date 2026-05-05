@@ -1,5 +1,5 @@
 const express = require("express");
-const { OpenAI } = require("openai");
+const { GoogleGenerativeAI } = require("@google/generative-ai");
 const cors = require("cors");
 const dotenv = require("dotenv");
 
@@ -27,9 +27,7 @@ app.options("/api/chat", (req, res) => {
 
 app.use(express.json());
 
-const openai = new OpenAI({
-  apiKey: process.env.OpenAI_API_KEY,
-});
+const genAI = new GoogleGenerativeAI(process.env.OpenAI_API_KEY);
 
 app.post("/api/chat", async (req, res) => {
   const { message } = req.body;
@@ -39,23 +37,18 @@ app.post("/api/chat", async (req, res) => {
   }
 
   try {
-    const response = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: [{ role: "user", content: message }],
-    });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+    const result = await model.generateContent(message);
+    const response = await result.response;
+    const text = response.text();
 
-    if (!response.choices || response.choices.length === 0) {
-      return res.status(500).json({ error: "No response from OpenAI" });
-    }
+    console.log("Gemini Response:", text);
 
-    console.log(response.choices[0].message.content); // ✅ Safe here
-
-    res.json({ reply: response.choices[0].message.content });
+    res.json({ reply: text });
   } catch (error) {
     console.error("Error:", error);
     res.status(500).json({ error: "Something went wrong with the API call" });
   }
-  console.log(response.choices[0].message.content);
 });
 
 

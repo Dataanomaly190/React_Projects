@@ -7,7 +7,10 @@ function groupByTimeDistance(items) {
   const groups = {};
 
   items.forEach((item) => {
-    const created = new Date(Date.now());
+    const timestamp = item.finalizedAt || item.issueDate;
+    if (!timestamp) return;
+
+    const created = new Date(timestamp);
     const diffMs = now - created;
     const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
 
@@ -37,7 +40,6 @@ export default function History() {
   const [groupedInvoices, setGroupedInvoices] = useState({});
   const [selectedImage, setSelectedImage] = useState(null);
 
-  // Refactored out so it can be reused if needed elsewhere
   const saveToHistoryViaScreenshot = async () => {
     const pageUrl = window.location.href;
     const payload = {
@@ -48,7 +50,7 @@ export default function History() {
     };
 
     try {
-      const res = await fetch("http://localhost:5002/capture-invoice", {
+      const res = await fetch("http://localhost:5000/api/history/capture-invoice", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -64,9 +66,8 @@ export default function History() {
 
   const handleView = (invoice) => {
     if (invoice.image) {
-      const imageUrl = `http://localhost:5002/uploads/${
-        invoice.image
-      }?t=${Date.now()}`;
+      const imageUrl = `http://localhost:5000/history/uploads/${invoice.image
+        }?t=${Date.now()}`;
       setSelectedImage(imageUrl);
     } else {
       alert("No image available for this invoice.");
@@ -80,7 +81,7 @@ export default function History() {
       return;
 
     try {
-      const res = await fetch("http://localhost:5002/reset-history", {
+      const res = await fetch("http://localhost:5000/api/history/reset", {
         method: "DELETE",
       });
 
@@ -103,10 +104,10 @@ export default function History() {
   useEffect(() => {
     const fetchHistory = async () => {
       try {
-        const res = await fetch("http://localhost:5002/history.json");
+        const res = await fetch("http://localhost:5000/api/history");
         const data = await res.json();
         const sorted = data.sort(
-          (a, b) => new Date(b.issueDate) - new Date(a.issueDate)
+          (a, b) => new Date(b.finalizedAt || b.issueDate) - new Date(a.finalizedAt || a.issueDate)
         );
         const grouped = groupByTimeDistance(sorted);
         setGroupedInvoices(grouped);

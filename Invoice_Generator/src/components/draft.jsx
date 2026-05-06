@@ -8,7 +8,7 @@ function groupByTimeDistance(items) {
   const groups = {};
 
   items.forEach((item) => {
-    const created = new Date(Date.now());
+    const created = new Date(item.createdAt || Date.now());
 
     const diffMs = now - created;
     const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
@@ -40,7 +40,7 @@ export default function Draft() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch("http://localhost:5001/drafts")
+    fetch("http://localhost:5000/api/drafts")
       .then((res) => res.json())
       .then((data) => {
         const sorted = data.sort(
@@ -54,7 +54,7 @@ export default function Draft() {
 
   const handleDelete = async (id) => {
     try {
-      await fetch(`http://localhost:5001/drafts/${id}`, { method: "DELETE" });
+      await fetch(`http://localhost:5000/api/drafts/${id}`, { method: "DELETE" });
       setGroupedDrafts((prevGroups) => {
         const updatedGroups = {};
         for (let key in prevGroups) {
@@ -64,7 +64,7 @@ export default function Draft() {
           }
         }
         return updatedGroups;
-      });      
+      });
     } catch (err) {
       console.error("Failed to delete draft:", err);
     }

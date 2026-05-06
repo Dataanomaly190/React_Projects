@@ -7,6 +7,7 @@
     flex-direction: row;
     align-items: flex-start;
     padding-bottom: 50px;
+    color: black;
 }
 
 .box1{
@@ -38,18 +39,17 @@
 }
 
 #Sub-box1_p{
-    text-align: end;
-    display: flex;
+    text-align: right;
     margin-left: 130px;
     border-radius: 25px;
     padding: 10px;
     width: 500px;
     resize: none;
     line-height: 1.5;
-    max-height: calc(1.5em * 8)px;
     background-color: white;
     border: white;
     color: black;
+    overflow: visible;
 }
 
 .Sub-box2{
@@ -87,6 +87,20 @@ input{
     padding: 10px;
     width: 300px;
     color: black;
+}
+
+.inline-input {
+    width: 40px !important;
+    height: auto !important;
+    padding: 2px 5px !important;
+    border-radius: 4px !important;
+    text-align: center;
+    display: inline !important;
+    vertical-align: baseline;
+    border: none !important;
+    outline: none !important;
+    line-height: normal !important;
+    font-size: inherit !important;
 }
 
 #Sub-box2_Item-title{
@@ -173,11 +187,11 @@ input{
     width: 975px;
     resize: none;
     line-height: 1.5;
-    max-height: calc(1.5em * 8)px;
     border-radius: 25px;
     color: black;
     background-color: white;
     padding: 10px;
+    overflow: visible;
 }
 
 .box2{
@@ -232,11 +246,11 @@ input{
 #box2-Sub-box1_Address{
     resize: none;
     line-height: 1.5;
-    max-height: calc(1.5em * 8)px;
     background-color: white;
     color: black;
     border-radius: 25px;
     padding: 10px;
+    overflow: visible;
 }
 
 #box2-Sub-dropdown{
@@ -285,10 +299,20 @@ input{
 }
 
 #box2-Sub-box7_section2_TaxAndDiscount{
-    width: 45px;
-    height: 10px;
-    border: white;
+    width: 40px !important;
+    height: 22px !important;
+    padding: 0 4px !important;
+    margin: 0 !important;
     font-weight: bold;
+    font-size: 14px;
+    line-height: 22px !important;
+    border: none !important;
+    border-radius: 0 !important;
+    outline: none !important;
+    background: transparent;
+    text-align: center;
+    box-sizing: content-box;
+    vertical-align: middle;
 }
 
 #box2-Sub-box9_button,

@@ -7,7 +7,7 @@ import "./invoice.css";
 import Send from "./send.jsx";
 import getCurrencyCode from "./countrytocurrency.jsx";
 import getSymbolFromCurrency from "currency-symbol-map";
-import domtoimage from "dom-to-image-more";
+import { captureNode } from "../utils/captureUtils.js";
 
 function Invoice() {
   const [SendShow, setSendShow] = useState(false);
@@ -15,7 +15,7 @@ function Invoice() {
   const [removeActive, setRemoveActive] = useState(false);
   const location = useLocation();
   const draftData = location.state?.draftData || null;
-  const draftId = location.state?.draftId || null;
+  const [draftId, setDraftId] = useState(location.state?.draftId || null);
   const [history, setHistory] = useState([]);
   const [Currency, setCurrency] = useState();
   const [formData, setFormData] = useState(
@@ -57,6 +57,15 @@ function Invoice() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    
+    // Only allow numeric values for these specific fields
+    const numericFields = ["invoiceNumber", "companyCode", "pinCode", "contact"];
+    if (numericFields.includes(name)) {
+      if (value !== "" && !/^\d+$/.test(value)) {
+        return;
+      }
+    }
+
     setFormData((prev) => ({
       ...prev,
       [name]: value,
@@ -76,7 +85,12 @@ function Invoice() {
     const itemIndex = updatedItems.findIndex((item) => item.id === id);
     if (itemIndex === -1) return;
 
-    if (field === "Qty" && val > 100) return;
+    if (field === "Qty") {
+      if (val !== "" && (isNaN(val) || Number(val) > 100)) return;
+    }
+    if (field === "Unit_price") {
+      if (val !== "" && isNaN(val)) return;
+    }
 
     updatedItems[itemIndex][field] = val;
 
@@ -149,12 +163,12 @@ function Invoice() {
         return;
       }
 
-      setFormData(updatedData); 
-      setSendShow(true); 
+      setFormData(updatedData);
+      setSendShow(true);
     } else {
       setSendShow(false);
     }
-  };  
+  };
 
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -204,7 +218,7 @@ function Invoice() {
         data: formData,
       };
 
-      const response = await fetch("http://localhost:5001/drafts", {
+      const response = await fetch("http://localhost:5000/api/drafts", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -213,6 +227,10 @@ function Invoice() {
       });
 
       if (response.ok) {
+        const result = await response.json();
+        if (result && result.id) {
+          setDraftId(result.id); // Store ID for future updates
+        }
         alert("Draft saved successfully!");
       } else {
         alert("Failed to save draft.");
@@ -224,7 +242,7 @@ function Invoice() {
   };
 
   useEffect(() => {
-    fetch("http://localhost:5002/history.json")
+    fetch("http://localhost:5000/api/history")
       .then((res) => {
         if (!res.ok) throw new Error("Network response was not ok");
         return res.json();
@@ -274,37 +292,15 @@ function Invoice() {
       }
 
       const node = refTarget.current;
-      const scaleFactor = 4;
       let payload = {};
-      const originalStates = [];
 
       try {
-        const fields = node.querySelectorAll("input, textarea");
-        fields.forEach((el) => {
-          originalStates.push({
-            el,
-            value: el.value,
-            placeholder: el.placeholder,
-          });
-          if (!el.value) el.placeholder = "";
-        });
+        const canvas = await captureNode(node);
 
-        const dataUrl = await domtoimage.toPng(node, {
-          quality: 1,
-          bgcolor: "whitesmoke",
-          style: {
-            transform: `scale(${scaleFactor})`,
-            transformOrigin: "top left",
-            width: `${node.scrollWidth}px`,
-            height: `${node.scrollHeight}px`,
-          },
-          width: node.scrollWidth * scaleFactor,
-          height: node.scrollHeight * scaleFactor,
-        });
+        const dataUrl = canvas.toDataURL("image/png");
 
-        const imageName = `invoice-${
-          updatedFormData.invoiceNumber
-        }-${Date.now()}.png`;
+        const imageName = `invoice-${updatedFormData.invoiceNumber
+          }-${Date.now()}.png`;
 
         payload = {
           invoiceNumber: updatedFormData.invoiceNumber || "null",
@@ -314,7 +310,7 @@ function Invoice() {
           imageData: dataUrl,
         };
 
-        const res = await fetch("http://localhost:5002/upload-invoice-image", {
+        const res = await fetch("http://localhost:5000/api/history/upload-image", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
@@ -328,21 +324,11 @@ function Invoice() {
         }
 
         setFormData(updatedFormData);
+        setHistory((prev) => [result.savedItem, ...prev]); // Update local history
         alert("Saved to history!");
-
-        if (draftId) {
-          await fetch(`http://localhost:5001/drafts/${draftId}`, {
-            method: "DELETE",
-          });
-        }
       } catch (err) {
         console.error("Error sending to history:", err?.message || err);
         alert("Error saving invoice to history.");
-      } finally {
-        originalStates.forEach(({ el, value, placeholder }) => {
-          el.placeholder = placeholder;
-          el.value = value;
-        });
       }
     }
   };
@@ -383,24 +369,38 @@ function Invoice() {
                   <strong>Invoice Number</strong>
                 </p>
                 <input
-                  type="number"
+                  type="text"
                   name="invoiceNumber"
                   placeholder="1009300"
+                  list="history-invoiceNumbers"
                   value={formData.invoiceNumber}
                   onChange={handleChange}
                 />
+                <datalist id="history-invoiceNumbers">
+                  {history.map((h, i) => (
+                    <option key={i} value={h.invoiceNumber} />
+                  ))}
+                </datalist>
               </div>
               <div>
                 <p>
                   <strong>Company Code</strong>
                 </p>
                 <input
-                  type="number"
+                  type="text"
                   name="companyCode"
                   placeholder="0001"
+                  list="history-companyCodes"
                   value={formData.companyCode}
                   onChange={handleChange}
                 />
+                <datalist id="history-companyCodes">
+                  {[...new Set(history.map((h) => h.companyCode))].map(
+                    (code, i) => (
+                      <option key={i} value={code} />
+                    )
+                  )}
+                </datalist>
               </div>
             </div>
             <div className="Sub-box2_Container2">
@@ -412,9 +412,17 @@ function Invoice() {
                 type="text"
                 placeholder="Project Name"
                 name="projectName"
+                list="history-projectNames"
                 value={formData.projectName}
                 onChange={handleChange}
               />
+              <datalist id="history-projectNames">
+                {[...new Set(history.map((h) => h.projectName))].map(
+                  (name, i) => (
+                    <option key={i} value={name} />
+                  )
+                )}
+              </datalist>
             </div>
             <div id="Sub-box2_container2">
               <div>
@@ -475,8 +483,8 @@ function Invoice() {
                       }}
                     />
                     <input
-                      type="number"
-                      max={100}
+                      type="text"
+                      inputMode="numeric"
                       id="Qty"
                       value={item.Qty}
                       onClick={(e) => e.stopPropagation()}
@@ -486,7 +494,8 @@ function Invoice() {
                       title="Maximum limit is 100."
                     />
                     <input
-                      type="number"
+                      type="text"
+                      inputMode="decimal"
                       id="unit_price"
                       value={item.Unit_price}
                       onClick={(e) => e.stopPropagation()}
@@ -495,7 +504,7 @@ function Invoice() {
                       }}
                     />
                     <input
-                      type="number"
+                      type="text"
                       id="total_price"
                       value={item.Total_price}
                       readOnly
@@ -610,7 +619,7 @@ function Invoice() {
             <div>
               <p id="box2-Sub-box1_heading">Pin/Postal Code</p>
               <input
-                type="number"
+                type="text"
                 placeholder="012345"
                 id="box2-Sub-box5_PinCode"
                 name="pinCode"
@@ -623,7 +632,7 @@ function Invoice() {
             <div>
               <p id="box2-Sub-box6_heading">Contact</p>
               <input
-                type="number"
+                type="text"
                 placeholder="+01 1240-34892-23892"
                 id="box2-Sub-box1_PhNo"
                 name="contact"
@@ -663,8 +672,8 @@ function Invoice() {
                 <strong>
                   Discount (
                   <input
-                    type="number"
-                    max={100}
+                    type="text"
+                    className="inline-input"
                     value={formData.discount_percentage}
                     onChange={(e) => {
                       const value = Number(e.target.value);
@@ -691,8 +700,8 @@ function Invoice() {
                 <strong>
                   Tax (
                   <input
-                    type="number"
-                    max={1000}
+                    type="text"
+                    className="inline-input"
                     value={formData.tax_percentage}
                     onChange={(e) => {
                       const value = Number(e.target.value);

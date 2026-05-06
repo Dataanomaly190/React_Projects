@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./send.css";
 import jsPDF from "jspdf";
-import domtoimage from "dom-to-image-more";
+import { captureNode } from "../utils/captureUtils.js";
 import getCurrencyCode from "./countrytocurrency.jsx";
 import getSymbolFromCurrency from "currency-symbol-map";
 import { saveAs } from "file-saver";
@@ -52,66 +52,31 @@ export default function Send({ data, refTarget }) {
     const node = refTarget.current;
     if (!node) return;
 
-    const scaleFactor = 4;
-    const originalStates = [];
-
     try {
-      // 🔹 Clear empty placeholders
-      const fields = node.querySelectorAll("input, textarea");
-      fields.forEach((el) => {
-        originalStates.push({
-          el,
-          value: el.value,
-          placeholder: el.placeholder,
-        });
-        if (!el.value) el.placeholder = "";
-      });
+      const canvas = await captureNode(node);
 
-      const dataUrl = await domtoimage.toPng(node, {
-        quality: 1,
-        bgcolor: "whitesmoke",
-        style: {
-          transform: `scale(${scaleFactor})`,
-          transformOrigin: "top left",
-          width: `${node.scrollWidth}px`,
-          height: `${node.scrollHeight}px`,
-        },
-        width: node.scrollWidth * scaleFactor,
-        height: node.scrollHeight * scaleFactor,
-      });
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF("landscape", "mm", "a4");
+      const imgWidth = 297;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      const pageHeight = 210;
+      let position = 0;
+      let heightLeft = imgHeight;
 
-      const img = new Image();
-      img.src = dataUrl;
+      pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
 
-      img.onload = () => {
-        const imgWidth = 297;
-        const imgHeight = (img.height * imgWidth) / img.width;
-        const pageHeight = 210;
-        let position = 0;
-        let heightLeft = imgHeight;
-
-        const pdf = new jsPDF("landscape", "mm", "a4");
-        pdf.addImage(dataUrl, "PNG", 0, position, imgWidth, imgHeight);
+      while (heightLeft > 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
         heightLeft -= pageHeight;
+      }
 
-        while (heightLeft > 0) {
-          position = heightLeft - imgHeight;
-          pdf.addPage();
-          pdf.addImage(dataUrl, "PNG", 0, position, imgWidth, imgHeight);
-          heightLeft -= pageHeight;
-        }
-
-        pdf.save(`invoice-${data.invoiceNumber || "null"}.pdf`);
-      };
+      pdf.save(`invoice-${data.invoiceNumber || "null"}.pdf`);
     } catch (error) {
       console.error("Error exporting PDF:", error);
       alert("Failed to export PDF.");
-    } finally {
-      // 🔹 Restore original input/textarea values
-      originalStates.forEach(({ el, value, placeholder }) => {
-        el.placeholder = placeholder;
-        el.value = value;
-      });
     }
   };
 
@@ -338,45 +303,15 @@ export default function Send({ data, refTarget }) {
     const node = refTarget.current;
     if (!node) return;
 
-    const scaleFactor = 4;
-    const originalStates = [];
-
     try {
-      // 🔹 Clear empty placeholders
-      const fields = node.querySelectorAll("input, textarea");
-      fields.forEach((el) => {
-        originalStates.push({
-          el,
-          value: el.value,
-          placeholder: el.placeholder,
-        });
-        if (!el.value) el.placeholder = "";
-      });
+      const canvas = await captureNode(node);
 
-      const dataUrl = await domtoimage.toPng(node, {
-        quality: 1,
-        bgcolor: "whitesmoke",
-        style: {
-          transform: `scale(${scaleFactor})`,
-          transformOrigin: "top left",
-          width: `${node.scrollWidth}px`,
-          height: `${node.scrollHeight}px`,
-        },
-        width: node.scrollWidth * scaleFactor,
-        height: node.scrollHeight * scaleFactor,
+      canvas.toBlob((blob) => {
+        saveAs(blob, `invoice-${data.invoiceNumber || "null"}.png`);
       });
-
-      const blob = await (await fetch(dataUrl)).blob();
-      saveAs(blob, `invoice-${data.invoiceNumber || "null"}.png`);
     } catch (err) {
       console.error("Error exporting PNG:", err);
       alert("Failed to export PNG.");
-    } finally {
-      // 🔹 Restore original input/textarea values
-      originalStates.forEach(({ el, value, placeholder }) => {
-        el.placeholder = placeholder;
-        el.value = value;
-      });
     }
   };  
 
@@ -402,30 +337,34 @@ export default function Send({ data, refTarget }) {
     if (!input || !format) return null;
 
     if (format === "pdf") {
-      const canvas = await html2canvas(input);
+      const canvas = await captureNode(input);
       const pdf = new jsPDF("landscape", "mm", "a4");
       const imgData = canvas.toDataURL("image/png");
-      pdf.addImage(
-        imgData,
-        "PNG",
-        0,
-        0,
-        297,
-        (canvas.height * 297) / canvas.width
-      );
+      const imgWidth = 297;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      const pageHeight = 210;
+      let position = 0;
+      let heightLeft = imgHeight;
+
+      pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+
+      while (heightLeft > 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+      }
       return pdf.output("blob");
     }
 
     if (format === "png") {
-      const canvas = await html2canvas(input);
+      const canvas = await captureNode(input);
       return new Promise((resolve) => canvas.toBlob(resolve));
     }
 
     if (format === "docx") {
-      const doc = new Document({
-        sections: [{ children: [new Paragraph("...")] }],
-      });
-      return await Packer.toBlob(doc);
+      return null; 
     }
 
     return null;
@@ -521,7 +460,7 @@ export default function Send({ data, refTarget }) {
     formData.append("invoiceNumber", "null");
 
     try {
-      const response = await fetch("http://localhost:5000/upload", {
+      const response = await fetch("http://localhost:5000/api/upload", {
         method: "POST",
         body: formData,
       });

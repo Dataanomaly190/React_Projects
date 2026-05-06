@@ -1,4 +1,0 @@
-src/assets/Weather_Condition_Clips/Clear_Sky/Clear_Sky_Video_Clip.mp4 filter=lfs diff=lfs merge=lfs -text
-src/assets/Weather_Condition_Clips/Heavy_Rain/Heavy_Rain_Video_Clip.mp4 filter=lfs diff=lfs merge=lfs -text
-src/assets/Weather_Condition_Clips/Light_Rain/Light_Rain_Video_Clip.mp4 filter=lfs diff=lfs merge=lfs -text
-src/assets/Weather_Condition_Clips/Mist/Mist_Video_Clip.mp4 filter=lfs diff=lfs merge=lfs -text

@@ -399,7 +399,7 @@ export default function Send({ data, refTarget }) {
         )}`;
         break;
       case "discord":
-        shareLink = `https://discord.com/channels/@me`; // Manual paste required
+        shareLink = `https://discord.com/channels/@me`; // Not correct - Not Available 
         break;
       case "linkedin":
         shareLink = `https://www.linkedin.com/sharing/share-offsite/?url=${encodedURL}`;
@@ -408,10 +408,10 @@ export default function Send({ data, refTarget }) {
         shareLink = `mailto:?subject=Invoice from YourCompany&body=Please find your invoice at ${fileURL}`;
         break;
       case "messenger":
-        shareLink = `https://www.messenger.com/t`; // Manual paste required
+        shareLink = `https://www.messenger.com/t`; // Not correct - Not Available 
         break;
       case "snapchat":
-        shareLink = `https://www.snapchat.com/`; // Manual paste required
+        shareLink = `https://www.snapchat.com/`; // Not correct - Not Available 
         break;
       case "pinterest":
         shareLink = `https://pinterest.com/pin/create/button/?url=${encodedURL}&description=${encodeURIComponent(
@@ -466,7 +466,7 @@ export default function Send({ data, refTarget }) {
       });
 
       const data = await response.json();
-      return data.fileUrl; // Assuming this is where the URL comes from
+      return data.fileUrl;
     } catch (error) {
       console.error("Error uploading file:", error);
       return null;

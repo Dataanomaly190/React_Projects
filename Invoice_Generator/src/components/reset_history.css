@@ -1,0 +1,42 @@
+.reset-history-btn {
+    display: flex;
+    align-items: center;
+    background-color: #f44336;
+    border: none;
+    border-radius: 6px;
+    padding: 8px;
+    color: white;
+    cursor: pointer;
+    width: 40px;
+    overflow: hidden;
+    transition: width 0.3s ease;
+    -webkit-user-select: none;
+    user-select: none;
+    box-shadow: 0 2px 8px rgba(244, 67, 54, 0.6);
+}
+
+.reset-history-btn:hover {
+    width: 150px;
+    box-shadow: 0 4px 12px rgba(244, 67, 54, 0.8);
+}
+
+.trash-icon {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    stroke: white;
+}
+
+.reset-text {
+    margin-left: 12px;
+    white-space: nowrap;
+    opacity: 0;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    transform: translateX(-10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.reset-history-btn:hover .reset-text {
+    opacity: 1;
+    transform: translateX(0);
+}

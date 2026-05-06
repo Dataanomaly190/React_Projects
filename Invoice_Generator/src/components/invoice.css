@@ -1,0 +1,343 @@
+.container{
+    background-color: whitesmoke;
+    min-height: 100vh;
+    height: auto;
+    width: 100vw;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    padding-bottom: 50px;
+}
+
+.box1{
+    min-height: 100px;
+    width: 1020px;
+    margin-left: 10px;
+    background-color: whitesmoke;
+    border-radius: 25px;
+    margin-top: 10px;
+}
+
+.img{
+    padding-left: 20px;
+    height: 100px;
+    width: 100px;
+}
+
+.Sub-box1{
+    border-radius: 25px;
+    background-color: white;
+    gap: 30px;
+    display: flex;
+    flex-direction: row;
+}
+
+#Sub-box1_title{
+    font-size: 50px;
+    font-weight: bolder;
+}
+
+#Sub-box1_p{
+    text-align: end;
+    display: flex;
+    margin-left: 130px;
+    border-radius: 25px;
+    padding: 10px;
+    width: 500px;
+    resize: none;
+    line-height: 1.5;
+    max-height: calc(1.5em * 8)px;
+    background-color: white;
+    border: white;
+    color: black;
+}
+
+.Sub-box2{
+    margin-top: 10px;
+    margin-bottom: 30px;
+    width: 1000px;
+    border-radius: 25px;
+    background-color: white;
+    padding: 10px;
+    padding-bottom: 30px;
+}
+
+#Sub-box2_title{
+    color: rgb(62, 62, 238);
+    font-weight: bolder;
+    border-bottom: 1px solid grey;
+    padding-bottom: 10px;
+}
+
+#Sub-box2_container1, 
+#Sub-box2_container2{
+    display: flex;
+    flex-direction: row;
+    gap: 350px;
+}
+
+#Sub-box2_Container2_ProjectName{
+    width: 975px;
+}
+
+input{
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 45px;
+    padding: 10px;
+    width: 300px;
+    color: black;
+}
+
+#Sub-box2_Item-title{
+    display: flex;
+    flex-direction: row;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+#Item_description_title{
+    padding-left: 20px;
+    font-weight: bold;
+}
+
+#Qty_title{
+    padding-left: 360px;
+    font-weight: bold;
+}
+
+#unit_price_title{
+    padding-left: 80px;
+    font-weight: bold;
+}
+
+#total_price_title{
+    padding-left: 130px;
+    font-weight: bold;
+}
+
+#Sub-box2_Item-details{
+    display: flex;
+    flex-direction: row;
+    gap: 25px;
+    padding: 10px;
+}
+
+#item_description{
+    width: 460px;
+}
+
+#Qty{
+    width: 60px;
+}
+
+#unit_price{
+    width: 160px;
+}
+
+#total_price{
+    width: 160px;
+}
+
+#Sub-box2_estimate-panel {
+    display: flex;
+    flex-direction: row;
+    gap: 470px;
+}
+
+#Sub-box2_estimate-panel_button {
+    color: rgb(0, 47, 255);
+    font-weight: bold;
+    cursor: pointer;
+    white-space: nowrap;
+    height: 30px;
+    width: 100px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+#Sub-box2_estimate-panel_subtotal {
+    font-weight: bold;
+}
+
+#Sub-box2_estimate-panel_rupees {
+    font-weight: bold;
+    padding-left: 20px;
+}
+
+#Sub-box2_Notes{
+    font-weight: bold;
+}
+
+#Sub-box2_Notes-input{
+    width: 975px;
+    resize: none;
+    line-height: 1.5;
+    max-height: calc(1.5em * 8)px;
+    border-radius: 25px;
+    color: black;
+    background-color: white;
+    padding: 10px;
+}
+
+.box2{
+    min-height: 880px;
+    width: 440px;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 10px;
+    padding: 20px;
+    border-radius: 25px;
+    background-color: white;
+}
+
+.box2-Sub-box1, 
+.box2-Sub-box5,
+.box2-Sub-box6{
+    display: flex;
+    flex-direction: row;
+    gap: 50px;
+}
+
+.box2-Sub-box8{
+    height: 50px;
+}
+
+.box2-Sub-box9{
+    margin-top: 30px;
+    margin-left: 10px;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+#box2-Sub-box1_FirstName, 
+#box2-Sub-box1_LastName,
+#box2-Sub-box5_PinCode,
+#box2-Sub-box1_PhNo,
+#box2-Sub-dropdown{
+    width: 170px;
+}
+
+#box2-Sub-box1_heading,
+#box2-Sub-box6_heading{
+    font-weight: bold;
+}
+
+#box2-Sub-box1_mail,
+#box2-Sub-box1_Address{
+    width: 415px;
+}
+
+#box2-Sub-box1_Address{
+    resize: none;
+    line-height: 1.5;
+    max-height: calc(1.5em * 8)px;
+    background-color: white;
+    color: black;
+    border-radius: 25px;
+    padding: 10px;
+}
+
+#box2-Sub-dropdown{
+    padding: 10px;
+    padding-left: 10px;
+    border-radius: 45px;
+    background-color: white;
+    color: black;
+    width: 190px;
+}
+
+#box2-Sub-dropdown option{
+    background-color: white;
+    color: black;
+}
+
+.box2-Sub-box6,
+.box2-Sub-box7{
+    padding-bottom: 30px;
+    border-bottom: 1px solid grey;
+}
+
+#box2-Sub-box7_section1,
+#box2-Sub-box7_section2,
+#box2-Sub-box7_section3{
+    display: flex;
+    flex-direction: row;
+}
+
+#box2-Sub-box7_section1{
+    gap: 200px;
+}
+
+#box2-Sub-box7_section2{
+    gap: 150px;
+}
+
+#box2-Sub-box7_section3{
+    gap: 120px;
+}
+
+#box2-Sub-box8_section1 {
+    display: flex;
+    flex-direction: row;
+    gap: 150px;
+}
+
+#box2-Sub-box7_section2_TaxAndDiscount{
+    width: 45px;
+    height: 10px;
+    border: white;
+    font-weight: bold;
+}
+
+#box2-Sub-box9_button,
+#box2-Sub-box9_button_Apply{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    white-space: nowrap;
+    background-color: rgb(55, 55, 239);
+    box-shadow: 4px 4px 5px rgb(177, 177, 177), -4px -4px 5px rgb(177, 177, 177);
+}
+
+#box2-Sub-box9_button_Apply{
+    padding-left: 45px;
+    padding-right: 45px;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.modal-content {
+    background-color: white;
+    border-radius: 45px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    min-width: 500px;
+    min-height: 400px;
+    position: relative;
+}
+
+.close-modal-button {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 20px;
+    font-weight: bold;
+    border: none;
+    background-color: crimson;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 25px;
+    cursor: pointer;
+}

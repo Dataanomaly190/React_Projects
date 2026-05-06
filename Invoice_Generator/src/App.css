@@ -1,0 +1,47 @@
+.title_panel{
+    background-color: rgba(108, 101, 101, 0.3);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    display: flex;
+    height: 30px;
+    width: 100vw;
+    margin-bottom: 10px;
+}
+
+.title_panel_box1{
+    margin-left: 10px;
+    display: flex;
+}
+
+.title_panel_box2{
+    margin-left: 200px;
+    display: flex;
+    flex-direction: row;
+}
+
+.homepage{
+    height: 30px;
+    width: 30px;
+    display: flex;
+    justify-self: left;
+}
+
+.invoice, .history, .draft{
+    height: 30px;
+    font-weight: bold;
+    width: 350px;
+    border-radius: 45px;
+    color: rgb(145, 112, 62);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: 1s ease-in-out;
+}
+
+.invoice:hover, 
+.history:hover, 
+.draft:hover{
+    background-color: rgba(75, 7, 98, 0.7);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+}

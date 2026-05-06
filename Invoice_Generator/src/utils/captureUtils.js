@@ -20,6 +20,12 @@ export async function captureNode(node, options = {}) {
     useCORS: true,
     scale: 2,
     backgroundColor: "whitesmoke",
+    scrollX: 0,
+    scrollY: -window.scrollY,
+    width: node.scrollWidth,
+    height: node.scrollHeight,
+    windowWidth: node.scrollWidth,
+    windowHeight: node.scrollHeight,
     ...options,
     onclone: (clonedDoc, clonedEl) => {
       const clonedInputs = clonedEl.querySelectorAll("input");

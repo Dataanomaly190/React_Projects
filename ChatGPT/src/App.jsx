@@ -13,6 +13,7 @@ export default function App() {
   const [conversation, setConversation] = useState([]); // Chat history (user + assistant)
   const textareaRef = useRef(null);
   const messagesEndRef = useRef(null); // To scroll to the bottom
+  const [Isbuffering, setIsbuffering] = useState(false);
 
   // Update text when user types
   const handleInputChange = (e) => {
@@ -37,39 +38,31 @@ export default function App() {
 
   // Function to handle sending data to the API
   const sendToAPI = async () => {
-    try {
-      const response = await fetch("http://localhost:5000/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: text }),
-      });
+  if (!text.trim()) return;
+  const userMsg = text;
+  setText("");
+  setIsbuffering(true);
 
-      if (!response.ok) {
-        throw new Error("Server returned an error");
-      }
+  setConversation((prev) => [...prev, { sender: "user", message: userMsg }]);
 
-      const data = await response.json();
+  try {
+    const response = await fetch(`${API_URL}/api/chat`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: userMsg }),
+    });
 
-      setConversation((prev) => [
-        ...prev,
-        { sender: "user", message: text },
-        { sender: "assistant", message: data.reply },
-      ]);
-      setText("");
-    } catch (error) {
-      console.error("Error:", error);
-      setConversation((prev) => [
-        ...prev,
-        { sender: "user", message: text },
-        {
-          sender: "assistant",
-          message: "⚠️ No response...",
-          error: true,
-        },
-      ]);
-      setText("");
-    }
-  };
+    if (!response.ok) throw new Error("Server error");
+
+    const data = await response.json();
+    setConversation((prev) => [...prev, { sender: "assistant", message: data.reply }]);
+  } catch (error) {
+    console.error("Error:", error);
+    setConversation((prev) => [...prev, { sender: "assistant", message: "⚠️ No response...", error: true }]);
+  } finally {
+    setIsbuffering(false);
+  }
+};
 
   const handleSubmit = (e) => {
     e.preventDefault(); // Prevent page refresh
@@ -124,6 +117,11 @@ export default function App() {
                 </div>
               </div>
             ))}
+            {Isbuffering && (
+              <div className="chat-message assistant">
+                <div className="assistant_chat">Thinking...</div>
+              </div>
+            )}
             <div ref={messagesEndRef} className={conversation.length === 0 ? "" : "gap"} />
           </div>
         </div>
